@@ -43,7 +43,7 @@ not_cancelled <- flights %>%
 
 #The flight delays are something crucial to analyse because if infuences
 #directly the passagenrs lives. Despite that, the scenarios 1 and 3 demonstrate
-# a delay or a early arrive in an inconsistent way. The passanger can´t have an
+# a delay or a early arrive in an inconsistent way. The passanger can?t have an
 #idea of the time the flight will arrive.
 #In the scenario 2, as the passanger know that the flight will always be 10 min 
 #late, they can plan their lives already with that new arrival time.
@@ -215,16 +215,18 @@ not_cancelled3 <- flights %>%
 Least_Miles<-not_cancelled3 %>% 
   group_by(carrier) %>% 
   summarise(
-    least_miles = sum(distance)
-  )%>%
-  arrange(least_miles)
+    least_miles = sum(distance))%>%
+  arrange(least_miles)%>%
+  slice(1)
+  
 
 Most_Miles<-not_cancelled3 %>%
   group_by(carrier) %>% 
   summarise(
-    most_miles = sum(distance)
-  )%>%
-  arrange(desc(most_miles))
+    most_miles = sum(distance))%>%
+  arrange(desc(most_miles))%>%
+  slice(1)
+  
 
 #4.6
 
@@ -238,3 +240,4 @@ Delays<-not_cancelled4 %>%
   )
 
 #4.7
+
