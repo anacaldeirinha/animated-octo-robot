@@ -37,7 +37,11 @@ for (i in 1:5){
   }
 }
 
-sum(result)
+ResultS<-sum(result)
 
+All<-choose(14,5)
+
+probability<-(ResultS/All)*100
+P<-c*100
 
 #####Problem 4#####
