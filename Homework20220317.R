@@ -6,7 +6,7 @@ library(tidyverse)
 
 
 
-#PROBLEM 1
+#PROBLEM1
 
 money<-100
 while(money > 0) {

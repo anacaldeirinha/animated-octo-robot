@@ -13,14 +13,14 @@ FactorialFunction <- function(inputNumber) {
   return(Result)
 }
 
-
 #####Problem 2#####
 
   a <- c(12,16,13,15,18,9,2,20)
   
   SDFunction <- function(inputvector){
-   Result<-sqrt(sum((a-mean(inputvector))^2/(length(inputvector)-1)))
-return(Result)
+   Result<-sqrt(sum((a - mean(inputvector))^2/
+                      (length(inputvector) - 1)))
+   return(Result)
   }
 
 SDFunction(a)
@@ -41,12 +41,26 @@ not_cancelled <- flights %>%
 # 5.6.7 Exercises 
 #1.
 
-#The flight delays are something crucial to analyse because if infuences
-#directly the passagenrs lives. Despite that, the scenarios 1 and 3 demonstrate
-# a delay or a early arrive in an inconsistent way. The passanger can?t have an
+#The flight delays are something crucial to analyse because if influences
+#directly the passengers lives. Despite that, the scenarios 1 and 3 demonstrate
+# a delay or a early arrive in an inconsistent way. The passenger can?t have an
 #idea of the time the flight will arrive.
-#In the scenario 2, as the passanger know that the flight will always be 10 min 
+#In the scenario 2, as the passenger know that the flight will always be 10 min 
 #late, they can plan their lives already with that new arrival time.
+
+  Delay.Early<-not_cancelled %>%
+  mutate(is.early =ifelse (arr_delay < -15,1,0))%>%
+  summarise(total_flights = n(),
+         sum.early=sum(is.early),
+         percent_early = (sum.early/total_flights)*100)
+  
+  Delay.Early<-not_cancelled %>%
+    mutate(is.early =ifelse (arr_delay < -15,1,0))%>%
+    group_by(tailnum)%>%
+    summarise(total_flights = n(),
+              sum.early=sum(is.early),
+              percent_early = (sum.early/total_flights)*100)
+  
 
 #2.
 not_cancelled %>%
@@ -152,16 +166,11 @@ Destinatons<-not_cancelled%>%
 
 #4.1
 
-find_mode <- function(x) {
-  u <- unique(x)
-  tab <- tabulate(match(x, u))
-  u[tab == max(tab)]
-}
-
-delays <- not_cancelled %>% 
-  group_by(carrier) %>% 
-  summarise(
-    mode = find_mode(dest))
+not_cancelled %>%
+  group_by(carrier, dest) %>%
+  summarise(Count = n()) %>%
+  arrange(carrier, desc(dest)) %>%
+  slice_head()
 
 
 
@@ -195,18 +204,14 @@ Least_Miles<-not_cancelled %>%
 not_cancelled2 <- flights %>% 
   filter(!is.na(dep_delay), !is.na(arr_delay),year==2013,month==2)
 
-FirstF<-not_cancelled2 %>% 
-  group_by(year, month, day) %>% 
-  summarise(
-    first = min(dep_time)
-  )
 
+FirstandLastF<-not_cancelled2 %>% 
+  arrange(year, month, day, dep_time) %>%
+  group_by(year, month, day) %>%
+  filter(row_number() == 1 |
+           row_number() == n()) %>%
+  ungroup()
 
-LastF<-not_cancelled2 %>% 
-  group_by(year, month, day) %>% 
-  summarise(
-    last = max(dep_time)
-  )
 
 #4.5
 not_cancelled3 <- flights %>% 
