@@ -97,3 +97,4 @@ below<-SMA%>%
 above<-SMA%>%
   group_by(symbol)%>%
   mutate(cross=ifelse(ten.days<twentysix.days& shift(ten.days)>shift(twentysix.days) ,"Cross",""))
+
