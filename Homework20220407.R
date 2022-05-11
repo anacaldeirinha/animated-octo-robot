@@ -78,15 +78,22 @@ Q5<-tq_get(c("FB","AMZN"))%>%
          date<=ymd("2019-07-01")|
            date>=ymd("2020-04-01"),
          date<=ymd("2020-07-01"))%>%
-  arrange(symbol)%>%
-  mutate(m = floor_date(date ,unit = c("month")))%>%
-  
+  mutate(year.date=substr(date,1,7))%>%
+  group_by(symbol,year.date)%>%
+  slice(n())
 
+  
 ######Problem 2#####
-#Use the dataframe from problem 1.2.
-# Use the SMA function from the tidyquant package to calculate the 10day SMA 
-# and the 26 day SMA for each of the 3 stocks. 
-# How many times did the 10 day SMA line cross 26 day SMA line from below? 
-# How many times did the 10 day SMA line cross 26 day SMA line from above?
-# You can take a look at this article: https://www.investopedia.com/trading/macd/
-# Essentially by cross from above/below I want you to find the buy/sell signals.
+SMA<-data%>%
+  group_by(symbol)%>%
+  mutate(ten.days=SMA(adjusted,10),twentysix.days=SMA(adjusted,26))
+
+library(data.table)
+
+below<-SMA%>%
+  group_by(symbol)%>%
+  mutate(cross=ifelse(ten.days>twentysix.days& shift(ten.days)<shift(twentysix.days) ,"Cross",""))
+
+above<-SMA%>%
+  group_by(symbol)%>%
+  mutate(cross=ifelse(ten.days<twentysix.days& shift(ten.days)>shift(twentysix.days) ,"Cross",""))
