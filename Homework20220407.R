@@ -10,7 +10,6 @@ library(lubridate)
 #1 and 2
 
 #First tought
-stockpricesF<-tq_get("FB")
 
 FinalF<-Dates%>%
   left_join(stockpricesF, by=c("Dates" = "date"))%>%
@@ -93,9 +92,9 @@ library(data.table)
 
 below<-SMA%>%
   group_by(symbol)%>%
-  mutate(cross=ifelse(ten.days>twentysix.days& shift(ten.days)<shift(twentysix.days) ,"Cross",""))
+  mutate(cross=ifelse(ten.days>twentysix.days& lag(ten.days)<lag(twentysix.days) ,"Cross",""))
 
 above<-SMA%>%
   group_by(symbol)%>%
-  mutate(cross=ifelse(ten.days<twentysix.days& shift(ten.days)>shift(twentysix.days) ,"Cross",""))
+  mutate(cross=ifelse(ten.days<twentysix.days& lag(ten.days)>lag(twentysix.days) ,"Cross",""))
 

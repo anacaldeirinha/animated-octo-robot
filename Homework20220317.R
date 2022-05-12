@@ -24,7 +24,6 @@ if(cointoss=="win"){
 print(money)
 }
 
-#HOMEWORK 17/03
 #5.2.4.
 #1. Find all flights that
 #1.1
