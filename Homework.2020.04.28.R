@@ -59,21 +59,14 @@ data<-few%>%
   mutate(buy.sell=ifelse(MACD<0 & lag(MACD)>0 ,"Sell",
                          ifelse(MACD>0 & lag(MACD)<0 ,"Buy","")))
 
-i=100
-stock=100
+data2<-data%>%
+  mutate(buy.sell=ifelse(MACD<signal.line & lag(MACD)>lag(signal.line) ,"Sell",
+                         ifelse(MACD>signal.line & lag(MACD)<lag(signal.line),"Buy","")))%>%
+  mutate(profitcoeff = (adjusted/lag(adjusted)),
+         profitcoeff = ifelse(is.na(profitcoeff),1, profitcoeff),
+         benchmark = cumprod (profitcoeff),
+         base.line.strategy = 100*benchmark,
+         stock=ifelse(MACD<signal.line,"no stock", "stock"),
+         trading.strategy = ifelse(stock == "no stock", lag(trading.strategy), lag(trading.strategy*profitcoeff)))
 
-
-
-
-
-# 6. Simulate how the strategy preforms and compare it to a benchmark strategy
-# of just buying and holding the stock.
-# In order to do this start with a portfolio of 100$ invested in the stock on the first day
-# and see how it performs. Example:
-# I start with 100$ and a stock which costs 100$ at the beginning of my time period.
-# I get a buy signal when the stock price is 90. I buy the stock.
-# I get a sell signal to sell the stock when the price is 110. I sell it and 
-# and don't get any more signals. I end up with 100 * 110 / 90 = 122.22 
-# The benchmark portfolio is I buy the stock at 100 at the beginning and at
-# the end of the period the stock price is 120. I end up with 120.
-# 122.22 > 120. so the MACD strategy was beating the market.
+     
